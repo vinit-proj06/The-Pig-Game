@@ -30,6 +30,15 @@
       <button class="btn btn--new">🔄 New game</button>
       <button class="btn btn--roll">🎲 Roll dice</button>
       <button class="btn btn--hold">📥 Hold</button>
+      
+      <!-- Leaderboard UI -->
+      <div class="leaderboard" style="position: absolute; top: 1rem; left: 50%; transform: translateX(-50%); background: rgba(255, 255, 255, 0.9); padding: 1rem 2.5rem; border-radius: 10px; z-index: 10; text-align: center; box-shadow: 0 1rem 2rem rgba(0,0,0,0.15); min-width: 250px;">
+        <h3 style="margin-top: 0; font-family: 'Nunito', sans-serif; color: #333; text-transform: uppercase;">🏆 Top Highscores</h3>
+        <ul class="leaderboard-list" style="list-style: none; padding: 0; margin: 0; font-size: 1.1rem; font-family: 'Nunito', sans-serif; color: #444; font-weight: bold;">
+          <li>Loading DB...</li>
+        </ul>
+      </div>
+
     </main>
     <script src="script.js"></script>
   </body>

@@ -15,8 +15,27 @@ const btnHold = document.querySelector('.btn--hold');
 
 let scores, currentScore, activePlayer, playing;
 
-
-
+const fetchLeaderboard = function() {
+  fetch('/api/scores')
+    .then(res => res.json())
+    .then(data => {
+      const listEl = document.querySelector('.leaderboard-list');
+      if (listEl) {
+        listEl.innerHTML = '';
+        if (data.length === 0) listEl.innerHTML = '<li>No scores yet!</li>';
+        data.forEach((entry, i) => {
+          const li = document.createElement('li');
+          li.textContent = `${i + 1}. ${entry.player} - ${entry.score}`;
+          listEl.appendChild(li);
+        });
+      }
+    })
+    .catch(err => {
+      console.error('API disconnected:', err);
+      const listEl = document.querySelector('.leaderboard-list');
+      if (listEl) listEl.innerHTML = '<li>Connecting to DB...</li>';
+    });
+};
 
 // Starting conditions
 const init = function () {
@@ -35,6 +54,7 @@ const init = function () {
   player1El.classList.remove('player--winner');
   player0El.classList.add('player--active');
   player1El.classList.remove('player--active');
+  fetchLeaderboard();
 };
 init();
 
@@ -91,6 +111,15 @@ btnHold.addEventListener('click', function () {
       document
         .querySelector(`.player--${activePlayer}`)
         .classList.remove('player--active');
+        
+      // Save score to backend
+      const playerName = document.getElementById(`name--${activePlayer}`).textContent;
+      fetch('/api/scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: playerName, score: scores[activePlayer] })
+      }).then(() => fetchLeaderboard())
+        .catch(err => console.error('Error saving to DB:', err));
     } else {
       // Switch to the next player
       switchPlayer();
